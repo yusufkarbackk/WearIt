@@ -1,1 +1,1 @@
-test jenkins poll SCM (3rd time)
+test update using pipeline SCM 
