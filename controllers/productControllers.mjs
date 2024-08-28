@@ -1,17 +1,7 @@
-import expresss from "express";
-import pg from 'pg'
-import { pool } from "./db/db.mjs";
-import { updateBajuVaidationSchema } from "./utils/vallidationSchema.mjs";
-import { createBajuValidationSchema } from "./utils/vallidationSchema.mjs";
-import { validationResult, matchedData, checkSchema, query, body } from "express-validator";
+import { pool } from "../db/db.mjs";
+import { validationResult, matchedData } from 'express-validator';
 
-const app = expresss()
-export default app
-const PORT = process.env.PORT || 3000
-
-app.use(expresss.json())
-
-app.get('/api/WearIt/', async (request, response) => {
+export const getWearItData = async (request, response) => {
     try {
         const result = await pool.query('SELECT * FROM baju')
         response.status(200).json(result.rows)
@@ -19,11 +9,10 @@ app.get('/api/WearIt/', async (request, response) => {
         console.log(error)
         response.status(500).json({ error: error.message })
     }
-})
+}
 
-app.post('/api/WearIt/', checkSchema(createBajuValidationSchema), async (request, response) => {
+export const createBaju = async (request, response) => {
     const result = validationResult(request)
-    console.log(result)
 
     if (!result.isEmpty()) {
         return response.status(400).send({ errors: result.array() })
@@ -39,9 +28,9 @@ app.post('/api/WearIt/', checkSchema(createBajuValidationSchema), async (request
     } catch (error) {
         response.status(500).json({ error: error.message })
     }
-})
+}
 
-app.patch('/api/WearIt/:id', checkSchema(updateBajuVaidationSchema), async (request, response) => {
+export const patchBaju = async (request, response) => {
     const errors = validationResult(request);
 
     if (!errors.isEmpty()) {
@@ -78,9 +67,9 @@ app.patch('/api/WearIt/:id', checkSchema(updateBajuVaidationSchema), async (requ
         console.error(error);
         response.status(500).send('Server Error');
     }
-});
+}
 
-app.delete('/api/WearIt/:id', async (request, response) => {
+export const deleteBaju = async (request, response) => {
     const { id } = request.params
     try {
         await pool.query('DELETE FROM baju WHERE id = $1', [id])
@@ -90,12 +79,9 @@ app.delete('/api/WearIt/:id', async (request, response) => {
 
         response.status(500).json({ error: error.message })
     }
-})
+}
 
-app.get('/api/WearIt/search', [
-    query('warna').isString().custom(value => isNaN(value)).withMessage('Warna harus bertipe string'),
-    query('ukuran').isString().custom(value => isNaN(value)).withMessage('Ukuran harus bertipe string'),
-], async (request, response) => {
+export const searchBaju = async (request, response) => {
     const errors = validationResult(request)
 
     if (!errors.isEmpty()) {
@@ -125,11 +111,9 @@ app.get('/api/WearIt/search', [
         console.error(error);
         response.status(500).send('Server Error');
     }
-})
+}
 
-app.patch('/api/WearIt/:id/tambah-stok', [
-    body('jumlah').isInt({ min: 1 }).withMessage('jumlah harus bilangan positif')
-], async (request, response) => {
+export const tambahStok = async (request, response) => {
     const errors = validationResult(request);
 
     if (!errors.isEmpty()) {
@@ -154,11 +138,9 @@ app.patch('/api/WearIt/:id/tambah-stok', [
         console.error(error);
         response.status(500).send('Server Error');
     }
-});
+}
 
-app.patch('/api/WearIt/:id/kurangi-stok', [
-    body('jumlah').isInt({ min: 1 }).withMessage('Jumlah harus berupa angka positif'),
-], async (request, response) => {
+export const kurangiStok = async (request, response) => {
     const errors = validationResult(request);
 
     if (!errors.isEmpty()) {
@@ -196,26 +178,22 @@ app.patch('/api/WearIt/:id/kurangi-stok', [
         console.error(error);
         response.status(500).send('Server Error');
     }
-});
+}
 
-app.get('/api/WearIt/stok-habis', async (request, response) => {
+export const stokHabis = async (request, response) => {
     try {
         const result = await pool.query('SELECT * FROM baju WHERE stok = 0')
         response.status(200).json(result.rows)
     } catch (error) {
         response.status(500).json({ error: error.message })
     }
-})
+}
 
-app.get('/api/WearIt/stok-minim', async (request, response) => {
+export const stokMinim = async (request, response) => {
     try {
         const result = await pool.query('SELECT * FROM baju WHERE stok < 5')
         response.status(200).json(result.rows)
     } catch (error) {
         response.status(500).json({ error: error.message })
     }
-})
-
-app.listen(PORT, () => {
-    console.log(`running on port ${PORT}`)
-})
+}

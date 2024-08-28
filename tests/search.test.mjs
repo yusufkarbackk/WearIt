@@ -1,8 +1,8 @@
 import request from 'supertest'
 import { expect } from 'chai';
 import sinon from 'sinon';
-import { pool } from '../src/db/db.mjs';
-import app from "../src/index.mjs";
+import { pool } from '../db/db.mjs';
+import app from "../index.mjs";
 import { validationResult } from 'express-validator';
 describe('GET /api/WearIt/search', () => {
     afterEach(() => {

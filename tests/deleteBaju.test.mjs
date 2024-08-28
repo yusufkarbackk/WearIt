@@ -2,8 +2,8 @@ import expresss from "express";
 import request from 'supertest'
 import { expect } from 'chai';
 import sinon from 'sinon';
-import { pool } from '../src/db/db.mjs';
-import app from "../src/index.mjs";
+import { pool } from '../db/db.mjs';
+import app from "../index.mjs";
 
 describe('DELETE /api/WearIt/:id', () => {
     afterEach(() => {

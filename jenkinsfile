@@ -9,7 +9,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    dockerImage = docker.build('yusufkarback/wearit:1.0.0')
+                    dockerImage = docker.build('yusufkarback/wearit:1.1.0')
                 }
             }
         }
