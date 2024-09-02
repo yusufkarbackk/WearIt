@@ -57,3 +57,22 @@ export const updateBajuVaidationSchema = {
         errorMessage: 'Stok must be an integer'
     }
 }
+
+export const createUserValidationSchema = {
+    username: {
+        notEmpty: {
+            errorMessage: "username tidak boleh kosong"
+        },
+        isString: {
+            errorMessage: "username harus bertipe data string"
+        }
+    },
+    password: {
+        notEmpty: {
+            errorMessage: "password tidak boleh kosong"
+        },
+        isString: {
+            errorMessage: "password harus bertipe data string"
+        }
+    }
+}
